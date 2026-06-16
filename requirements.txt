@@ -1,0 +1,9 @@
+apache-airflow==2.9.0
+pyspark==3.5.0
+delta-spark==3.0.0
+requests==2.31.0
+streamlit
+pandas==2.1.4
+plotly==5.18.0
+python-dotenv==1.0.0
+setuptools

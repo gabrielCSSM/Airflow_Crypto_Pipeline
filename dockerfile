@@ -1,0 +1,26 @@
+FROM python:3.12
+
+# Java
+RUN apt-get update && \
+    apt-get install -y default-jdk && \
+    apt-get clean
+
+# Crear estructura de Hadoop
+RUN mkdir -p /opt/hadoop/bin
+
+ENV HADOOP_HOME=/opt/hadoop
+ENV PATH=$PATH:/opt/hadoop/bin
+ENV JAVA_HOME=/usr/lib/jvm/default-java
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+RUN chmod +x start.sh
+
+EXPOSE 8501
+
+ENTRYPOINT ["./start.sh"]
