@@ -70,7 +70,7 @@ def validate():
     if count == 0:
         raise ValueError("La tabla Gold top_coins está vacía. Algo falló en el pipeline.")
     
-    print(f"✅ Validación OK: {count} registros en Gold top_coins")
+    print(f"Validación OK: {count} registros en Gold top_coins")
 
 with DAG(
     dag_id="crypto_pipeline_dag",
