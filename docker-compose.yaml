@@ -12,6 +12,8 @@ services:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 5s
       retries: 10
+    networks:
+      - airflow-net
 
   airflow-init:
     build:
@@ -32,10 +34,12 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dags/data:/opt/airflow/data
-      - ./dags/logs:/opt/airflow/logs
+      - ./logs/opt/airflow/logs
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - airflow-net
 
   airflow-api-server:
     build:
@@ -50,7 +54,9 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dags/data:/opt/airflow/data
-      - ./dags/logs:/opt/airflow/logs
+      - ./logs/opt/airflow/logs
+    networks:
+      - airflow-net
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -66,7 +72,9 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dags/data:/opt/airflow/data
-      - ./dags/logs:/opt/airflow/logs
+      - ./logs/opt/airflow/logs
+    networks:
+      - airflow-net
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -82,7 +90,9 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dags/data:/opt/airflow/data
-      - ./dags/logs:/opt/airflow/logs
+      - ./logs/opt/airflow/logs
+    networks:
+      - airflow-net
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -97,6 +107,8 @@ services:
       - "4040:4040"
     environment:
       - PYTHONPATH=/app
+    networks:
+      - airflow-net
   streamlit:
     build:
       context: .
@@ -108,3 +120,9 @@ services:
     ports:
       - "8501:8501"
     command: streamlit run dashboard.py --server.address=0.0.0.0
+    networks:
+      - airflow-net
+
+networks:
+  airflow-net:
+    driver: bridge
