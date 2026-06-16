@@ -75,7 +75,6 @@ def validate():
 with DAG(
     dag_id="crypto_pipeline_dag",
     description="Pipeline de datos de criptomonedas: CoinGecko + Binance → Delta Lake → Streamlit",
-    default_args=default_args,
     start_date=datetime(2026, 6, 16),
     catchup=False,                   
     tags=["crypto", "lakehouse", "spark"],
