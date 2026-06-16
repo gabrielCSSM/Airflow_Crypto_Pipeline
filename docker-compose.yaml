@@ -34,7 +34,7 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dags/data:/opt/airflow/data
-      - ./logs/opt/airflow/logs
+      - ./logs:/opt/airflow/logs
     depends_on:
       postgres:
         condition: service_healthy
@@ -54,7 +54,7 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dags/data:/opt/airflow/data
-      - ./logs/opt/airflow/logs
+      - ./logs:/opt/airflow/logs
     networks:
       - airflow-net
     depends_on:
@@ -72,7 +72,7 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dags/data:/opt/airflow/data
-      - ./logs/opt/airflow/logs
+      - ./logs:/opt/airflow/logs
     networks:
       - airflow-net
     depends_on:
@@ -90,7 +90,7 @@ services:
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dags/data:/opt/airflow/data
-      - ./logs/opt/airflow/logs
+      - ./logs:/opt/airflow/logs
     networks:
       - airflow-net
     depends_on:
