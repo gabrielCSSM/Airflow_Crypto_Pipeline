@@ -1,4 +1,5 @@
 dags/data
 dags/utils/__pycache__
 dags/__pycache__
-dags/logs
+logs
+.env
