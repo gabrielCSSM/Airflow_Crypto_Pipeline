@@ -64,7 +64,8 @@ def transform_coingecko_to_silver(spark):
     
     df_clean.write \
         .format("delta") \
-        .mode("append") \
+        .mode("overwrite") \
+        .option("partitionOverwriteMode", "dynamic") \
         .partitionBy("date") \
         .save(silver_path)
     
@@ -103,7 +104,8 @@ def transform_binance_to_silver(spark):
     
     df_clean.write \
         .format("delta") \
-        .mode("append") \
+        .mode("overwrite") \
+        .option("partitionOverwriteMode", "dynamic") \
         .partitionBy("date") \
         .save(silver_path)
     

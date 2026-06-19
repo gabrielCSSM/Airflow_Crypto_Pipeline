@@ -4,7 +4,7 @@ import os
 import pandas as pd
 from datetime import datetime
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import lit, current_timestamp
+from pyspark.sql.functions import lit, current_timestamp, date_format
 
 # Cliente
 import sys
@@ -35,6 +35,10 @@ def create_spark_df(raw_data, attachement):
     spark_df = spark_df.withColumn("ingestion_timestamp", current_timestamp())
     spark_df = spark_df.withColumn("source", lit(f"{attachement}"))
     
+    spark_df = spark_df.withColumn(
+        "ingestion_date", date_format("ingestion_timestamp", "yyyy-MM-dd")
+    )
+    
     return spark_df
     
 
@@ -49,9 +53,10 @@ def ingest_coingecko_markets(spark):
     output_path = os.path.join(BASE_PATH, "bronze", "coingecko_markets")
     
     df.write \
-      .mode("append") \
-      .partitionBy("source") \
-      .parquet(output_path)
+    .mode("overwrite") \
+    .partitionBy("source", "ingestion_date") \
+    .option("partitionOverwriteMode", "dynamic") \
+    .parquet(output_path)
     
     print(f"CoinGecko Markets guardado en {output_path} ({df.count()} registros)")
     return df.count()
@@ -68,9 +73,10 @@ def ingest_binance_ticker(spark):
     output_path = os.path.join(BASE_PATH, "bronze", "binance_ticker")
     
     df.write \
-      .mode("append") \
-      .partitionBy("source") \
-      .parquet(output_path)
+    .mode("overwrite") \
+    .partitionBy("source", "ingestion_date") \
+    .option("partitionOverwriteMode", "dynamic") \
+    .parquet(output_path)
     
     print(f"Binance Ticker guardado en {output_path} ({df.count()} registros)")
     return df.count()
@@ -97,12 +103,16 @@ def ingest_global_market(spark):
     df = spark.createDataFrame([record])
     df = df.withColumn("ingestion_timestamp", current_timestamp())
     df = df.withColumn("source", lit("coingecko_global"))
+    df = df.withColumn("ingestion_date", date_format("ingestion_timestamp", "yyyy-MM-dd"))  # ← añadir esto
     
     output_path = os.path.join(BASE_PATH, "bronze", "global_market")
     
     df.write \
-      .mode("append") \
-      .parquet(output_path)
+    .mode("overwrite") \
+    .partitionBy("ingestion_date") \
+    .option("partitionOverwriteMode", "dynamic") \
+    .parquet(output_path)
+      
     
     print(f"Métricas globales guardadas en {output_path}")
 

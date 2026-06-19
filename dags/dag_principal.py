@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.standard.operators.python import PythonOperator
 from airflow.providers.standard.operators.bash import BashOperator
+import pendulum
 import subprocess
 import os
 
@@ -74,7 +75,8 @@ def validate():
 with DAG(
     dag_id="crypto_pipeline_dag",
     description="Pipeline de datos de criptomonedas: CoinGecko + Binance → Delta Lake → Streamlit",
-    start_date=datetime(2026, 6, 16),
+    start_date=pendulum.today("UTC").subtract(days=1),
+    schedule="@daily",
     catchup=False,                   
     tags=["crypto", "lakehouse", "spark"],
     max_active_runs=1

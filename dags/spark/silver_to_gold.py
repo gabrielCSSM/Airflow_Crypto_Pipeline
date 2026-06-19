@@ -75,7 +75,7 @@ def gold_market_sentiment(spark):
     df_sentiment = df_sentiment.withColumn("snapshot_timestamp", F.current_timestamp())
     
     gold_path = os.path.join(BASE_PATH, "gold", "market_sentiment")
-    df_sentiment.write.format("delta").mode("append").save(gold_path)
+    df_sentiment.write.format("delta").mode("overwrite").save(gold_path)
     print("Gold market_sentiment guardado")
 
 # Ranking de criptomonedas por volatilidad (rango entre high y low en 24h).
