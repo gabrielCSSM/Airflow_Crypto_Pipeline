@@ -290,11 +290,6 @@ La función `F.rank()` asigna la posición 1 a la moneda con mayor capitalizaci�
 
 ## 7. Decisiones técnicas
 
-### `mode("append")` en Bronze vs `mode("overwrite")` en Gold
-
-- **Bronze usa `append`** porque cada ejecución del pipeline representa un snapshot diferente en el tiempo. Acumular estos snapshots permite análisis histórico de la evolución de precios.
-- **Gold usa `overwrite`** en las tablas de ranking y volatilidad porque estas tablas representan el estado *actual* del mercado, calculado siempre desde Silver con los datos más recientes. Sobrescribir garantiza que el dashboard siempre muestra datos frescos sin acumulación innecesaria.
-
 ### `left join` en lugar de `inner join`
 
 El `inner join` descartaría todas las monedas de CoinGecko que no tengan par USDT en Binance: monedas de baja capitalización, tokens de ecosistemas específicos (Solana, Cardano) o criptomonedas que solo se operan en otros exchanges. Esto reduciría artificialmente el universo de análisis. Con el `left join`, todas las monedas de CoinGecko están presentes en la tabla unificada, y simplemente los campos de Binance quedan como `null` cuando no hay correspondencia.
